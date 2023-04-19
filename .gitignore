@@ -1,0 +1,6 @@
+package-lock.json
+*.js
+node_modules
+bin/
+server/bin
+server/lib
