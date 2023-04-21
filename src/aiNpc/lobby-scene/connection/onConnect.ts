@@ -1,8 +1,8 @@
 import { DataChange, Room, RoomAvailable } from "colyseus.js";
 import { GAME_STATE, PlayerState } from "src/state";
-import * as clientState from "src/aiNpc/npc-scene/connection/state/client-state-spec";
-import * as serverState from "src/aiNpc/npc-scene/connection/state/server-state-spec";
-import * as serverStateSpec from "src/aiNpc/npc-scene/connection/state/server-state-spec";
+import * as clientState from "src/aiNpc/lobby-scene/connection/state/client-state-spec";
+import * as serverState from "src/aiNpc/lobby-scene/connection/state/server-state-spec";
+import * as serverStateSpec from "src/aiNpc/lobby-scene/connection/state/server-state-spec";
 
 //import * as SceneData from "src/og-decentrally/modules/scene";
 //import * as gameUI from "../ui/index";
@@ -11,7 +11,7 @@ import * as utils from "@dcl/ecs-scene-utils";
 import { createEntityForSound, createEntitySound, isNull, notNull, realDistance } from "src/utils/utilities";
 import * as ui from "@dcl/ui-scene-utils";
 
-import { PlayerRankingsType, sortPlayersByPosition } from "./state-data-utils";
+
 //import { Projectile } from "src/og-decentrally/modules/projectiles";
 //import { LevelDataState, TrackFeaturePosition } from "src/og-decentrally/modules/connection/state/server-state-spec";
 //import { levelManager } from "src/og-decentrally/tracks/levelManager";
@@ -27,9 +27,10 @@ import { CONFIG } from "src/config";
 import { REGISTRY } from "src/registry";
 import { Dialog, DialogWindow,ButtonData } from "@dcl/npc-scene-utils";
 import resources, { setSection } from "src/dcl-scene-ui-workaround/resources";
-import { closeAllInteractions } from "src/aiNpc/npc/npcSetup";
 import { ChatNext, ChatPart, streamedMsgs } from "src/aiNpc/npc/streamedMsgs";
-
+import { showInputOverlay } from "src/aiNpc/npc/customNPCUI";
+import { closeAllInteractions, createMessageObject, sendMsgToAI } from "src/aiNpc/npc/connectedUtils";
+ 
 const canvas = ui.canvas
 
 let allRooms: RoomAvailable[] = []; 
@@ -96,89 +97,6 @@ export function onDisconnect(room: Room, code?: number) {
     REGISTRY.activeNPCSound.set( sourceName,soundEntity )
   })
 }
-let messageIdProcessed = 0
-
-
-
-
-const inputContainer = new UIContainerRect(canvas)
-inputContainer.width = "300"
-inputContainer.height = "50"
-inputContainer.hAlign = "center"
-inputContainer.vAlign = "bottom"
-inputContainer.positionY = -10 
-inputContainer.color = Color4.Blue()
-inputContainer.opacity = 1
-inputContainer.visible = false
-
-const inputBackground = new UIImage(inputContainer,new Texture("images/DispenserAtlas.png"))
-setSection(inputBackground,resources.backgrounds.promptBackground)
-inputBackground.width = "100%"
-inputBackground.height = "100%"
-inputBackground.vAlign = "center"
-inputBackground.hAlign = "center"
-
-
-const textInput = new UIInputText(inputContainer)
-textInput.width = "80%"
-textInput.height = "25px"
-textInput.vAlign = "center"
-textInput.hAlign = "center"
-textInput.fontSize = 10
-textInput.placeholder = "Ask question here"
-//textInput.placeholderColor = Color4.Gray()
-textInput.positionY = "0"
-textInput.isPointerBlocker = true
-
-const sendButton = new UIImage(inputContainer,new Texture("images/DispenserAtlas.png"))
-setSection(sendButton,resources.buttons.roundGold) 
-sendButton.width = "25"
-sendButton.height = "25px"
-sendButton.vAlign = "bottom"
-sendButton.hAlign = "right"
-//sendButton.fontSize = 10
-//sendButton.placeholder = "Write message here"
-//textInput.placeholderColor = Color4.Gray()
-sendButton.positionY = "10"
-sendButton.isPointerBlocker = true
- 
-   
- 
-export function sendMsgToAI( msg:serverStateSpec.ChatMessage ){
-  if(msg === undefined || msg.text.text.trim().length === 0){
-    ui.displayAnnouncement("cannot send empty message")
-    return
-  }
-  log("sendMsgToAI",msg)  
-  //hide input
-  inputContainer.visible = false  
-  //mark waiting for reply
-  REGISTRY.activeNPC.thinking([REGISTRY.askWaitingForResponse])
-  //wrap it in object
-  if(GAME_STATE.gameRoom) GAME_STATE.gameRoom.send("message", msg)  
-}   
-
-let lastCharacterId = undefined
-
-export function createMessageObject(msgText:string,characterId:serverStateSpec.CharacterId,room: Room<clientState.NpcGameRoomState>){
-  const chatMessage:serverStateSpec.ChatMessage = new serverStateSpec.ChatMessage({
-    date: new Date().toUTCString(),
-    packetId:{interactionId:"",packetId:"",utteranceId:""},
-    type: serverStateSpec.ChatPacketType.TEXT, 
-    text:{text:msgText,final:true},
-    routing: 
-    {source:{isCharacter:false,isPlayer:true,name:room.sessionId,xId:{resourceName:room.sessionId}}
-      ,target:{isCharacter:true,isPlayer:false,name:"",xId:characterId ? characterId : lastCharacterId}
-    },
-  })
-  if(!characterId){
-    log("createMessageObject using lastCharacterId",lastCharacterId)
-  }
-  if(characterId) lastCharacterId = characterId
-  return chatMessage
-}  
-
-
 
   //start fresh
 
@@ -222,17 +140,6 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   //need a managing system
 
    
-  textInput.onTextSubmit = new OnTextSubmit((x) => {
-    log("sending ", x)
-    //REGISTRY.activeNPC.dialog.closeDialogWindow()
-    closeAllInteractions()
-    //utils.setTimeout(200,()=>{ 
-      const chatMessage:serverStateSpec.ChatMessage = createMessageObject(x.text,undefined,room)
-      sendMsgToAI(chatMessage) 
-    //} 
-    textInput.value =""  
-  }) 
-   
   const whatIsYourName:ButtonData={
     label:"What is your name",goToDialog:REGISTRY.askWaitingForResponse.name,
     triggeredActions:()=>{
@@ -251,8 +158,11 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   const goodbye:ButtonData={
     label:"Goodbye",goToDialog:REGISTRY.askWaitingForResponse.name,
     triggeredActions:()=>{
+      REGISTRY.activeNPC?.goodbye()
+
       closeAllInteractions()  
-      inputContainer.visible = false
+      showInputOverlay(false)
+      
     }
   }
   const doYouTakeCredit:ButtonData={
@@ -287,15 +197,16 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
     } 
     const dialog = chatPart.text.createNPCDialog() 
     
-    inputContainer.visible = false
+    showInputOverlay(false)
 
     dialog.triggeredByNext = () => {
-      REGISTRY.activeNPC.npc.playAnimation(REGISTRY.activeNPC.npcAnimations.WAVE.name,true,REGISTRY.activeNPC.npcAnimations.WAVE.duration)
+      const NO_LOOP = true
+      REGISTRY.activeNPC.npc.playAnimation(REGISTRY.activeNPC.npcAnimations.TALK.name,NO_LOOP,REGISTRY.activeNPC.npcAnimations.TALK.duration)
       
       //FIXME WORKAROUND, need to string dialogs together
       //or this workaround lets it end, then start a new one
       //REGISTRY.activeNPC.dialog.closeDialogWindow() //does not work
-      closeAllInteractions() 
+      closeAllInteractions({exclude:REGISTRY.activeNPC})
       utils.setTimeout(200,()=>{
         if(!chatPart.endOfInteraction && !streamedMsgs.hasNextAudioNText()){
           log("createDialog","chatPart.end.hasNext?",chatPart,". waiting for more")
@@ -328,10 +239,10 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
             streamedMsgs.waitingForMore = false 
 
             //GETTING TRIGGERED on race condition i think, audio came through but not text?
-            //show input box
-            inputContainer.visible = true
+            //show input box 
+            REGISTRY.activeNPC.endOfRemoteInteractionStream()
             //debugger
-            REGISTRY.activeNPC.talk([askWhatCanIHelpYouWithDialog,REGISTRY.askWaitingForResponse]);
+            //REGISTRY.activeNPC.talk([askWhatCanIHelpYouWithDialog,REGISTRY.askWaitingForResponse]);
           }else{
             streamedMsgs.waitingForMore = true 
             //still waiting for more from server
