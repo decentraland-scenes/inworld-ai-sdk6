@@ -20,6 +20,13 @@ Input.instance.subscribe('BUTTON_DOWN', ActionButton.PRIMARY, true, (e) => {
   // }
 })
 
+const floor = new Entity()
+floor.addComponent(new BoxShape())
+floor.addComponent(new Transform({
+  position:new Vector3(16/2,.1,16/2),
+  scale:new Vector3(16,.1,16)
+}))
+engine.addEntity(floor)
 
 initRegistry()
 
@@ -42,3 +49,4 @@ initDialogs()
       lobbyConn.onNpcRoomConnect(room)
     }
     
+
