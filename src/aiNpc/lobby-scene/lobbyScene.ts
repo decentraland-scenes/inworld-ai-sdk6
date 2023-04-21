@@ -6,16 +6,16 @@ import { joinOrCreateRoom, joinOrCreateRoomAsync } from "src/connection/connect-
 import { disconnect } from "src/connection/connection";
 import { REGISTRY } from "src/registry";
 import * as ui from "@dcl/ui-scene-utils";
-import * as serverStateSpec from "src/aiNpc/npc-scene/connection/state/server-state-spec";
+import * as serverStateSpec from "src/aiNpc/lobby-scene/connection/state/server-state-spec";
 import { Room } from "colyseus.js";
-import * as clientState from "src/aiNpc/npc-scene/connection/state/client-state-spec";
+import * as clientState from "src/aiNpc/lobby-scene/connection/state/client-state-spec";
 
 import * as utils from '@dcl/ecs-scene-utils';
 import { GAME_STATE } from "src/state";
-import { closeAllInteractions } from "../npc/npcSetup";
-import { createMessageObject, sendMsgToAI } from "./connection/onConnect";
+
 import { streamedMsgs } from "../npc/streamedMsgs";
 import { RemoteNpc } from "../npc/remoteNpc";
+import { closeAllInteractions, createMessageObject, sendMsgToAI } from "../npc/connectedUtils";
 //import { GridMap } from "src/land-infection/modules/grid";
 //import { gridSize, mapCenter, mapSize } from "src/land-infection/globals";
 
@@ -41,7 +41,7 @@ export class LobbyScene{
     
         //inputContainer.visible = false  
         
-        closeAllInteractions(REGISTRY.activeNPC)
+        closeAllInteractions({exclude:REGISTRY.activeNPC})
         
         p.thinking([REGISTRY.askWaitingForResponse]) 
 

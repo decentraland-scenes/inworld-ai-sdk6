@@ -3,7 +3,6 @@ import { NPC } from "@dcl/npc-scene-utils"
 import { Dialog } from '@dcl/npc-scene-utils'
 import { Room } from "colyseus.js"
 import { RemoteNpc } from "src/aiNpc/npc/remoteNpc"
-import { NpcScene } from "src/aiNpc/npc-scene/npcScene"
 import { LobbyScene } from "src/aiNpc/lobby-scene/lobbyScene"
 
 
@@ -30,7 +29,6 @@ export class Registry{
   activeNPCSound: Map<string,Entity>=new Map()
   //npcAnimations!:NpcAnimationNameType
   askWaitingForResponse!:Dialog
-  npcScene!:NpcScene
   lobbyScene!:LobbyScene
   serverTime:number = -1//default to not set so clear
   //for computing time relative to remote server

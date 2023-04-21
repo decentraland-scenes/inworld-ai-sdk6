@@ -3,7 +3,6 @@ import { REGISTRY, initRegistry } from './registry'
 import { Room } from 'colyseus.js'
 import * as lobbyConn from 'src/aiNpc/lobby-scene/connection/onConnect';
 import { LobbyScene } from 'src/aiNpc/lobby-scene/lobbyScene'
-import { NpcScene } from 'src/aiNpc/npc-scene/npcScene'
 import { CONFIG, initConfig } from './config'
 import { initDialogs } from 'src/aiNpc/npc/npcDialog'
 
@@ -32,7 +31,6 @@ initDialogs()
     //// AI NPC initial init
     setupNPC()
 
-    REGISTRY.npcScene = new NpcScene()
     REGISTRY.lobbyScene = new LobbyScene()
 
     REGISTRY.lobbyScene.init()

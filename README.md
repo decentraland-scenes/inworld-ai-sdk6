@@ -2,9 +2,8 @@
 
 Deployed here 
 
-Zone (DevSeason0.dcl.eth)
-[https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaipoc.dcl.eth
-](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaipoc.dcl.eth)
+Zone (InworldAiSdk6.dcl.eth)
+[ https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth)
 
 ## Try it out
 
