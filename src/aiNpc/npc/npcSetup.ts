@@ -48,6 +48,7 @@ let npcBluntBobby:RemoteNpc
  
 
 export function setupNPC(){
+  log("setupNPC","ENTRY")
   /*
   myNPCCheshireCat = new RemoteNpc(
       {resourceName:"workspaces/default-ygg_eqgm5efk2wl3w9pdyw/characters/the_cheshire_cat"}
@@ -287,7 +288,7 @@ export function setupNPC(){
     p.npc.dialog.text.hTextAlign = 'center'
   }
 
-   
+  log("setupNPC","RETURN")
 }
 /*
 export let xmasTheme = new Texture('images/npcAtlas.png')
