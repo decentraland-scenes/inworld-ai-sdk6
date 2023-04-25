@@ -49,44 +49,8 @@ let npcBluntBobby:RemoteNpc
 
 export function setupNPC(){
   log("setupNPC","ENTRY")
-  /*
-  myNPCCheshireCat = new RemoteNpc(
-      {resourceName:"workspaces/default-ygg_eqgm5efk2wl3w9pdyw/characters/the_cheshire_cat"}
-      ,new npc.NPC(
-    { position: new Vector3(1, 0.1, 14) },
-    'models/whiteRabbit_Anim.glb',//'models/Placeholder_NPC_02.glb',
-    () => { 
-      log('myNPCCheshireCat.NPC activated!')
-      
-      REGISTRY.activeNPC = myNPCCheshireCat
-
-      closeAllInteractions(REGISTRY.activeNPC)
-
-      myNPCCheshireCat.waiting([REGISTRY.askWaitingForResponse])
-
-    },
-    { 
-      idleAnim: NPC_ANIMATIONS.IDLE.name,
-      walkingAnim: NPC_ANIMATIONS.RUN.name, 
-      walkingSpeed: 15 ,//11 on full scale seems tiny big faster. 15 is roughlly player run speed, 20 is roughly fast enough to keep out of player range
-      faceUser: true,
-      portrait: { path: 'images/cheshireCatPortrait.png', height: 250, width: 250,offsetX:0  },
-      darkUI: true,
-      coolDownDuration: 3,
-      hoverText: 'CHAT', 
-      onlyClickTrigger: false,
-      onlyExternalTrigger: false,
-      reactDistance: 5, //KEEP IT UNDER STOPPING DISTANCE
-      continueOnWalkAway: true,
-      dialogCustomTheme: RESOURCES.textures.dialogAtlas,
-      onWalkAway: () => {
-        log('walked away') 
-      }
-    }
-  ))
-  myNPC.setName( "npc.myNPCCheshireCat")*/
-
-  const offsetpath = 4
+  
+  const offsetpath = 2
   let dogePath: npc.FollowPathData = {
     path: [
       new Vector3(offsetpath,.24,offsetpath),
@@ -119,9 +83,9 @@ export function setupNPC(){
         faceUser: true,//continue to face user???
         portrait: 
           { 
-            path: 'images/portraits/catguy.png', height: 300, width: 300
+            path: 'images/portraits/doge.png', height: 300, width: 300
             ,offsetX:-10,offsetY:0
-            , section:{sourceHeight:384,sourceWidth:384} 
+            , section:{sourceHeight:256,sourceWidth:256} 
           },
         darkUI: true,
         coolDownDuration: 3,
@@ -173,8 +137,8 @@ export function setupNPC(){
   const dclGuide = new RemoteNpc(
     {resourceName:"workspaces/genesis_city/characters/dcl_guide"}
     ,new npc.NPC( 
-      { position: dogePath.path[0].clone(),scale: new Vector3(2, 2, 2) }, 
-      'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
+      { position: new Vector3(6,1.5,6),scale: new Vector3(1,1,1) }, 
+      'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
       () => { 
         log('dclGuide.NPC activated!')
         REGISTRY.activeNPC = dclGuide
@@ -191,7 +155,7 @@ export function setupNPC(){
         faceUser: true,//continue to face user???
         portrait: 
           { 
-            path: 'images/portraits/catguy.png', height: 300, width: 300
+            path: 'images/portraits/marsha.png', height: 300, width: 300
             ,offsetX:-10,offsetY:0
             , section:{sourceHeight:384,sourceWidth:384} 
           },
@@ -205,7 +169,7 @@ export function setupNPC(){
         continueOnWalkAway: true,
         dialogCustomTheme: RESOURCES.textures.dialogAtlas,
         onWalkAway: () => {
-          log("NPC",dclGuide.name,'on walked away')  
+          log("NPC",dclGuide.name,'on walked away')   
           const LOOP = false
           
           //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
@@ -220,9 +184,13 @@ export function setupNPC(){
       thinking:{
         enabled:true,
         model: new GLTFShape('models/loading-icon.glb'),
+        modelScale: new Vector3(4,4,4),
+        modelOffset: new Vector3(0,1,0),
         offsetX: 0,
-        offsetY: 2 ,
-        offsetZ: 0
+        offsetY: 1,
+        offsetZ: 0,
+        textScale: new Vector3(2,2,2),
+        textOffset: new Vector3(0,-1,0)
       }
       ,onEndOfRemoteInteractionStream: ()=>{
         showInputOverlay(true)
