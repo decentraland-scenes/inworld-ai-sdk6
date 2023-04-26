@@ -12,10 +12,13 @@ import { QuestionData } from "./remoteNpc";
 
 const canvas = ui.canvas
 
-const PROMPT_WIDTH = 550
+const PROMPT_WIDTH = 600
+
+//make undefined for fall back default atlas
+const customAtlas = undefined //new Texture('images/custom-dark-atlas-v3.png')
 
 const buttonsSyle = ui.ButtonStyles.DARK
-const askSomethingElse = new ui.CustomPrompt(ui.PromptStyles.DARKLARGE, PROMPT_WIDTH, 220)
+const askSomethingElse = new ui.CustomPrompt(ui.PromptStyles.DARKLARGE, PROMPT_WIDTH, 180)
 askSomethingElse.hide()//immeidatly hide it
 askSomethingElse.background.vAlign = 'bottom'
 //askSomethingElse.closeIcon.visible = false
@@ -35,49 +38,57 @@ const QUESTION_LIST:QuestionData[] = [
   {displayQuestion:"Sing me a song!",queryToAi:"Sing me a song!"},
   {displayQuestion:"Recite me a poem!",queryToAi:"Recite me a poem!"},
   {displayQuestion:"Tell me a joke!",queryToAi:"Tell me a joke!"},
-  {displayQuestion:"What is your favorite music?",queryToAi:"What is your favorite music?"},
+  {displayQuestion:"Your Favorite music?",queryToAi:"What is your favorite music?"},
   {displayQuestion:"Do you have any pets?",queryToAi:"Do you have any pets?"},
-  {displayQuestion:"What can I do here",queryToAi:"What can I do here?"},
-  {displayQuestion:"Tell me about Decentraland",queryToAi:"Tell me about Decentraland"},
+  {displayQuestion:"What can I do here?",queryToAi:"What can I do here?"},
+  //{displayQuestion:"Tell me about Decentraland",queryToAi:"Tell me about Decentraland"},
   {displayQuestion:"What is a wearable!",queryToAi:"What is a wearable!"},
   {displayQuestion:"What is an emote!",queryToAi:"What is an emote!"}
 ]
 const askButtonsList:ui.CustomPromptButton[] = []
-askSomethingElse.addText("Ask something else?", 0, 110, Color4.White(),18)
+askSomethingElse.addText("Ask Me Anything!", 0, 75, Color4.White(),16)
 
 
-const INPUT_POS_Y = 45
+const INPUT_POS_Y = 27
 const BUTTON_POS_Y = -15
-const BUTTON_HEIGHT = 20
+const BUTTON_HEIGHT = 28
+const BUTTON_WIDTH = 135
 const BUTTON_OFFSET_Y = 5
-const NEXT_BUTTON_HEIGHT = 20
-const BUTTON_COLUMN_SPACING = 90
 
-const commonQLbl = askSomethingElse.addText("Example Questions", 0, BUTTON_POS_Y + 2*BUTTON_HEIGHT, Color4.White(),10)
+const BUTTON_COLUMN_FULL_WIDTH = 180
+const BUTTON_COLUMN_SPACING = BUTTON_COLUMN_FULL_WIDTH/2
+const BUTTON_OFFSET_X = 50
+const BUTTON_ROWS_AMOUNT = 1
+const INPUT_BOX_WIDTH = 412
+const INPUT_BOX_HEIGHT = 30
+const NEXT_BUTTON_HEIGHT = BUTTON_HEIGHT
+const NEXT_BACK_WIDTH = BUTTON_WIDTH//120//30
 
-askSomethingElse.addText("Powered by AI. Stay Safe. Do not share personally identifiable information.\nNPC may produce inaccurate information about people, places, or facts", 0, -80, Color4.White(),8)
+//const commonQLbl = askSomethingElse.addText("Example Questions", 0, BUTTON_POS_Y + 2*BUTTON_HEIGHT, Color4.White(),10)
+
+askSomethingElse.addText("Powered by AI. Stay Safe. Do not share personally identifiable information.\nNPC may produce inaccurate information about people, places, or facts.", 0, -50, Color4.White(),8)
 
 //askSomethingElse.addText("Or ask your own question below", 0, -20, Color4.White(),14)
 
-const askButton1 = askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1, BUTTON_POS_Y, () => {
+const askButton1 = askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1 - BUTTON_OFFSET_X, BUTTON_POS_Y, () => {
   sendMessageToAi("Q1")
 }, buttonsSyle)
 
 
-const askButton2 = askSomethingElse.addButton("Q2", BUTTON_COLUMN_SPACING, BUTTON_POS_Y, () => {
+const askButton2 = askSomethingElse.addButton("Q2", 0, BUTTON_POS_Y, () => {
   sendMessageToAi("Q2")
 }, buttonsSyle)
 
-const askButton3 = askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1, BUTTON_POS_Y - BUTTON_HEIGHT- BUTTON_OFFSET_Y, () => {
+const askButton3 = BUTTON_ROWS_AMOUNT < 2 ? undefined : askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1 - BUTTON_OFFSET_X, BUTTON_POS_Y - BUTTON_HEIGHT- BUTTON_OFFSET_Y, () => {
   sendMessageToAi("Q1")
 }, buttonsSyle)
 
 
-const askButton4 = askSomethingElse.addButton("Q2", BUTTON_COLUMN_SPACING, BUTTON_POS_Y- BUTTON_HEIGHT-BUTTON_OFFSET_Y, () => {
+const askButton4 = BUTTON_ROWS_AMOUNT < 2 ? undefined : askSomethingElse.addButton("Q2", BUTTON_COLUMN_SPACING + BUTTON_OFFSET_X, BUTTON_POS_Y- BUTTON_HEIGHT-BUTTON_OFFSET_Y, () => {
   sendMessageToAi("Q2")
 }, buttonsSyle)
 
-const askButtonNext = askSomethingElse.addButton("more questions >>", 0, BUTTON_POS_Y - (2*(BUTTON_HEIGHT+BUTTON_OFFSET_Y)), () => {
+const askButtonNext = askSomethingElse.addButton("More Examples", BUTTON_COLUMN_SPACING + BUTTON_OFFSET_X , BUTTON_POS_Y, () => {
   nextPageOfQuestions(1)
 }, buttonsSyle)
 /*
@@ -85,24 +96,32 @@ const askButtonPrev = askSomethingElse.addButton("<<", -100, 0, () => {
   nextPageOfQuestions(-1)
 }, buttonsSyle)*/
 
-const NEXT_BACK_WIDTH = 120//30
+
 for(const b of [askButtonNext]){
   b.label.width = NEXT_BACK_WIDTH
   b.image.height = NEXT_BUTTON_HEIGHT
   b.image.width = NEXT_BACK_WIDTH
   b.label.fontSize = 12
+
+  if(customAtlas){
+    b.image.source = customAtlas
+    setSection(b.image,resources.buttons.squareGold)
+  }
+  
 }
 
 askButtonsList.push(askButton1)
 askButtonsList.push(askButton2)
-askButtonsList.push(askButton3)
-askButtonsList.push(askButton4)
+if(BUTTON_ROWS_AMOUNT > 1){
+  askButtonsList.push(askButton3)
+  askButtonsList.push(askButton4)
+}
 
 let counter = -1
 function nextPageOfQuestions(dir:number){
   //debugger
   //counter+=dir
-  
+  let loopCnt = 0
   for(const b of askButtonsList){
     counter+=dir
     if(counter >= QUESTION_LIST.length){
@@ -116,9 +135,21 @@ function nextPageOfQuestions(dir:number){
     b.label.fontSize = ASK_BTN_FONT_SIZE 
     b.label.value = q.displayQuestion
     b.image.height = BUTTON_HEIGHT
+    b.image.width = BUTTON_WIDTH
     b.image.onClick = new OnPointerDown(()=>{
       sendMessageToAi(q.queryToAi) 
     })
+
+    if(customAtlas){
+      b.image.source = customAtlas
+      if(loopCnt === 0){
+        setSection(b.image,resources.buttons.roundGold)
+      }
+      if(loopCnt === 1){
+        setSection(b.image,resources.buttons.roundGold)
+      }
+    }
+    loopCnt++
   }
 }
 nextPageOfQuestions(1) 
@@ -136,7 +167,7 @@ export function showInputOverlay(val: boolean) {
   if (val) {
     //copy the portrait being used
     //wish had access to private data REGISTRY.activeNPC.npc.dialog.defaultPortrait to place more dynamically
-    portait.image.positionX = -PROMPT_WIDTH/2 + 10//(REGISTRY.activeNPC.npc.dialog.portrait.width/2)
+    portait.image.positionX = -PROMPT_WIDTH/2 + -20//(REGISTRY.activeNPC.npc.dialog.portrait.width/2)
     if(REGISTRY.activeNPC){
       portait.image.source = REGISTRY.activeNPC.npc.dialog.portrait.source
       portait.image.width = REGISTRY.activeNPC.npc.dialog.portrait.width
@@ -170,20 +201,35 @@ function sendMessageToAi(message: string){
 
 
 const inputContainer = new UIContainerRect(askSomethingElse.background)
-inputContainer.width = 320
-inputContainer.height = 50
+inputContainer.width = INPUT_BOX_WIDTH + 6
+inputContainer.height = INPUT_BOX_HEIGHT + 6
 inputContainer.positionY = INPUT_POS_Y
 inputContainer.hAlign = "center"
 inputContainer.vAlign = "center"
-inputContainer.color = Color4.White()
+if(!customAtlas) inputContainer.color = Color4.White()
 inputContainer.opacity = 1
 inputContainer.visible = true
+
+if(customAtlas){
+  const bginputContainer = new UIImage(inputContainer,customAtlas)
+  bginputContainer.width = "100%"
+  bginputContainer.height = "100%"
+  setSection(bginputContainer,{
+      sourceWidth: 440,
+      sourceHeight: 40,
+      sourceLeft: 12,
+      sourceTop: 750
+    })
+}
 
 const placeHolder =   "Type your question HERE then hit enter..."
 const custUiInputText = askSomethingElse.addTextBox(0,INPUT_POS_Y,placeHolder)
 const textInput = custUiInputText.fillInBox
+textInput.width = INPUT_BOX_WIDTH 
+textInput.height = INPUT_BOX_HEIGHT
 textInput.fontSize = 14
-textInput.outlineColor = Color4.White()
+if(customAtlas) textInput.focusedBackground = Color4.FromHexString("#FFFFFF00")
+//textInput.outlineColor = Color4.White()
 
 
 textInput.onTextSubmit = new OnTextSubmit((x) => {
@@ -231,4 +277,4 @@ sendButton.isPointerBlocker = true
 
 
 
-//showInputOverlay(true)
+showInputOverlay(true)
