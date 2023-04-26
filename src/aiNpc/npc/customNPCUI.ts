@@ -14,8 +14,8 @@ const canvas = ui.canvas
 
 const PROMPT_WIDTH = 550
 
-const buttonsSyle = ui.ButtonStyles.RED
-const askSomethingElse = new ui.CustomPrompt(ui.PromptStyles.DARKLARGE, PROMPT_WIDTH, 250)
+const buttonsSyle = ui.ButtonStyles.DARK
+const askSomethingElse = new ui.CustomPrompt(ui.PromptStyles.DARKLARGE, PROMPT_WIDTH, 220)
 askSomethingElse.hide()//immeidatly hide it
 askSomethingElse.background.vAlign = 'bottom'
 //askSomethingElse.closeIcon.visible = false
@@ -27,38 +27,57 @@ askSomethingElse.closeIcon.onClick = new OnPointerDown(()=>{
    
 const portait = askSomethingElse.addIcon('images/portraits/catguy.png',-PROMPT_WIDTH/2,0,200,200)
  
-const ASK_BTN_FONT_SIZE = 16
+const ASK_BTN_FONT_SIZE = 12
 
 //const ASK_BTN_WIDTH = 16
 
 const QUESTION_LIST:QuestionData[] = [
-  {displayQuestion:"Tell me about\nDecentraland",queryToAi:"Tell me about\nDecentraland"},
   {displayQuestion:"Sing me a song!",queryToAi:"Sing me a song!"},
-  {displayQuestion:"What can I do here",queryToAi:"What can I do here?"},
+  {displayQuestion:"Recite me a poem!",queryToAi:"Recite me a poem!"},
   {displayQuestion:"Tell me a joke!",queryToAi:"Tell me a joke!"},
+  {displayQuestion:"What is your favorite music?",queryToAi:"What is your favorite music?"},
+  {displayQuestion:"Do you have any pets?",queryToAi:"Do you have any pets?"},
+  {displayQuestion:"What can I do here",queryToAi:"What can I do here?"},
+  {displayQuestion:"Tell me about Decentraland",queryToAi:"Tell me about Decentraland"},
   {displayQuestion:"What is a wearable!",queryToAi:"What is a wearable!"},
   {displayQuestion:"What is an emote!",queryToAi:"What is an emote!"}
 ]
 const askButtonsList:ui.CustomPromptButton[] = []
-askSomethingElse.addText("Ask something else?", 0, 120, Color4.White(),20)
+askSomethingElse.addText("Ask something else?", 0, 110, Color4.White(),18)
 
-const commonQLbl = askSomethingElse.addText("Example Questions", 0, 90, Color4.White(),14)
 
-askSomethingElse.addText("Powered by AI. Stay Safe. Do not share personally identifiable information.", 0, -95, Color4.White(),10)
+const INPUT_POS_Y = 45
+const BUTTON_POS_Y = -15
+const BUTTON_HEIGHT = 20
+const BUTTON_OFFSET_Y = 5
+const NEXT_BUTTON_HEIGHT = 20
+const BUTTON_COLUMN_SPACING = 90
 
-askSomethingElse.addText("Or ask your own question below", 0, -20, Color4.White(),14)
+const commonQLbl = askSomethingElse.addText("Example Questions", 0, BUTTON_POS_Y + 2*BUTTON_HEIGHT, Color4.White(),10)
 
-const askButton1 = askSomethingElse.addButton("Q1", -100, 35, () => {
+askSomethingElse.addText("Powered by AI. Stay Safe. Do not share personally identifiable information.\nNPC may produce inaccurate information about people, places, or facts", 0, -80, Color4.White(),8)
+
+//askSomethingElse.addText("Or ask your own question below", 0, -20, Color4.White(),14)
+
+const askButton1 = askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1, BUTTON_POS_Y, () => {
   sendMessageToAi("Q1")
 }, buttonsSyle)
 
 
-const askButton2 = askSomethingElse.addButton("Q2", 100, 35, () => {
+const askButton2 = askSomethingElse.addButton("Q2", BUTTON_COLUMN_SPACING, BUTTON_POS_Y, () => {
   sendMessageToAi("Q2")
 }, buttonsSyle)
 
+const askButton3 = askSomethingElse.addButton("Q1", BUTTON_COLUMN_SPACING*-1, BUTTON_POS_Y - BUTTON_HEIGHT- BUTTON_OFFSET_Y, () => {
+  sendMessageToAi("Q1")
+}, buttonsSyle)
 
-const askButtonNext = askSomethingElse.addButton("more questions >>", 0, -10, () => {
+
+const askButton4 = askSomethingElse.addButton("Q2", BUTTON_COLUMN_SPACING, BUTTON_POS_Y- BUTTON_HEIGHT-BUTTON_OFFSET_Y, () => {
+  sendMessageToAi("Q2")
+}, buttonsSyle)
+
+const askButtonNext = askSomethingElse.addButton("more questions >>", 0, BUTTON_POS_Y - (2*(BUTTON_HEIGHT+BUTTON_OFFSET_Y)), () => {
   nextPageOfQuestions(1)
 }, buttonsSyle)
 /*
@@ -69,13 +88,15 @@ const askButtonPrev = askSomethingElse.addButton("<<", -100, 0, () => {
 const NEXT_BACK_WIDTH = 120//30
 for(const b of [askButtonNext]){
   b.label.width = NEXT_BACK_WIDTH
-  b.image.height = 20
+  b.image.height = NEXT_BUTTON_HEIGHT
   b.image.width = NEXT_BACK_WIDTH
   b.label.fontSize = 12
 }
 
 askButtonsList.push(askButton1)
 askButtonsList.push(askButton2)
+askButtonsList.push(askButton3)
+askButtonsList.push(askButton4)
 
 let counter = -1
 function nextPageOfQuestions(dir:number){
@@ -94,6 +115,7 @@ function nextPageOfQuestions(dir:number){
     const q = QUESTION_LIST[counter] 
     b.label.fontSize = ASK_BTN_FONT_SIZE 
     b.label.value = q.displayQuestion
+    b.image.height = BUTTON_HEIGHT
     b.image.onClick = new OnPointerDown(()=>{
       sendMessageToAi(q.queryToAi) 
     })
@@ -146,7 +168,7 @@ function sendMessageToAi(message: string){
 }
 
 
-const INPUT_POS_Y = -80
+
 const inputContainer = new UIContainerRect(askSomethingElse.background)
 inputContainer.width = 320
 inputContainer.height = 50
