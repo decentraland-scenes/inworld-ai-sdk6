@@ -50,7 +50,7 @@ let npcBluntBobby:RemoteNpc
 export function setupNPC(){
   log("setupNPC","ENTRY")
   
-  const offsetpath = 2
+  const offsetpath = 2.5
   let dogePath: npc.FollowPathData = {
     path: [
       new Vector3(offsetpath,.24,offsetpath),
