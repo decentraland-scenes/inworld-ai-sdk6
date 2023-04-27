@@ -41,12 +41,21 @@ initDialogs()
     REGISTRY.lobbyScene = new LobbyScene()
 
     REGISTRY.lobbyScene.init()
-    REGISTRY.lobbyScene.initArena(true)
+    //REGISTRY.lobbyScene.initArena(true), lazy load?
   
   
     REGISTRY.onConnectActions = (room: Room<any>, eventName: string) => {
       //npcConn.onNpcRoomConnect(room)
       lobbyConn.onNpcRoomConnect(room)
     }
+
+    //docs say will fire after 1 minute
+    onIdleStateChangedObservable.add(({ isIdle }) => {
+      log("Idle State change: ", isIdle)
+      if(isIdle){
+        //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
+        REGISTRY.lobbyScene.endBattle()
+      }
+    })
     
 
