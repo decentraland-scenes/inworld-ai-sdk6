@@ -9,8 +9,6 @@ Zone (InworldAiSdk6.dcl.eth)
 
 ## Configuration
 
-NOTE: In an attempt to make playing the scene locally PLAYFAB_ENABLED is by default set to false in the Scene and Colyseus making so you can play locally with no external services configure (do not need a PlayFab account to test it out).  To enable playfab follow the instructions below.
-
 ### Scene
 
 You may want to configure endpoints for your local environment in the instance where you do not want or need to run Colyseus and login server locally
@@ -30,9 +28,21 @@ const VARIABLE: Record<string, string> = {
 
 `COLYSEUS_ENDPOINT_URL` - Websocker endpoint
 
+```
+const COLYSEUS_ENDPOINT_URL: Record<string, string> = {
+  local: "ws://127.0.0.1:2567",  //default local server port
+  dev: "YOUR-DEV-ENDPOINT-HERE", 
+  stg: "YOUR-STG-ENDPOINT-HERE",
+  prd: "YOUR-PROD-ENDPOINT-HERE", 
+};
+ 
+```
+
 ## Try it out
 
 #### Run Colyseus (Multiplayer server) (seperate tab)
+
+To create your own scene and characters follow the documentation found here [https://docs.inworld.ai/docs/intro](https://docs.inworld.ai/docs/intro).   Once you are finished run your local server.  
 
 Instructions here [https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme](https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme)
 
