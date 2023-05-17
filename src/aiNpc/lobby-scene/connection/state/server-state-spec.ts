@@ -220,13 +220,13 @@ export enum ChatControlType {
   UNKNOWN = 0,
   INTERACTION_END = 3
 }
-export declare enum EmotionStrengthCode {
+export enum EmotionStrengthCode {
   UNSPECIFIED = "UNSPECIFIED",
   WEAK = "WEAK",
   STRONG = "STRONG",
   NORMAL = "NORMAL"
 }
-export declare enum EmotionBehaviorCode {
+export enum EmotionBehaviorCode {
   NEUTRAL = "NEUTRAL",
   DISGUST = "DISGUST",
   CONTEMPT = "CONTEMPT",
@@ -419,10 +419,12 @@ export class ChatMessage implements IChatPacket{
 }
 
 export type CharacterId={
-  resourceName:string
-  //id:string
+  resourceName:string//natural key
+  confirmed?:boolean //if server confirmed active
+  id?:string//server side storage
 }
 export type TriggerId={
   name:string
+  confirmed?:boolean //if server confirmed active
   //id:string
 }
