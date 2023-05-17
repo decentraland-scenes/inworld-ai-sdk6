@@ -220,7 +220,74 @@ export enum ChatControlType {
   UNKNOWN = 0,
   INTERACTION_END = 3
 }
+export declare enum EmotionStrengthCode {
+  UNSPECIFIED = "UNSPECIFIED",
+  WEAK = "WEAK",
+  STRONG = "STRONG",
+  NORMAL = "NORMAL"
+}
+export declare enum EmotionBehaviorCode {
+  NEUTRAL = "NEUTRAL",
+  DISGUST = "DISGUST",
+  CONTEMPT = "CONTEMPT",
+  BELLIGERENCE = "BELLIGERENCE",
+  DOMINEERING = "DOMINEERING",
+  CRITICISM = "CRITICISM",
+  ANGER = "ANGER",
+  TENSION = "TENSION",
+  TENSE_HUMOR = "TENSE_HUMOR",
+  DEFENSIVENESS = "DEFENSIVENESS",
+  WHINING = "WHINING",
+  SADNESS = "SADNESS",
+  STONEWALLING = "STONEWALLING",
+  INTEREST = "INTEREST",
+  VALIDATION = "VALIDATION",
+  AFFECTION = "AFFECTION",
+  HUMOR = "HUMOR",
+  SURPRISE = "SURPRISE",
+  JOY = "JOY"
+}
+export namespace EmotionEvent {
+  export type AsObject = {
+      joy: number,
+      fear: number,
+      trust: number,
+      surprise: number,
+      behavior: EmotionEvent.SpaffCode,
+      strength: EmotionEvent.Strength,
+  }
+
+  export enum SpaffCode {
+  NEUTRAL = 0,
+  DISGUST = 1,
+  CONTEMPT = 2,
+  BELLIGERENCE = 3,
+  DOMINEERING = 4,
+  CRITICISM = 5,
+  ANGER = 6,
+  TENSION = 7,
+  TENSE_HUMOR = 8,
+  DEFENSIVENESS = 9,
+  WHINING = 10,
+  SADNESS = 11,
+  STONEWALLING = 12,
+  INTEREST = 13,
+  VALIDATION = 14,
+  AFFECTION = 15,
+  HUMOR = 16,
+  SURPRISE = 17,
+  JOY = 18,
+  }
+
+  export enum Strength {
+  UNSPECIFIED = 0,
+  WEAK = 1,
+  STRONG = 2,
+  NORMAL = 3,
+  }
+}
 export interface ChatPacketProps {
+  createTime?:number
   audio?: AudioEvent;
   control?: ControlEvent;
   custom?: CustomEvent;
@@ -238,14 +305,8 @@ export interface PacketId {
   interactionId: string;
 }
 export interface EmotionEvent {
-  joy: number;
-  fear: number;
-  trust: number;
-  surprise: number;
-  //behavior: EmotionBehavior;
-  behavior?:any//FIXME DEFINE CORRECTLY, is this new?
-  strength?:any//FIXME DEFINE CORRECTLY, is this new?
-  //strength: EmotionStrength;
+  behavior: EmotionBehaviorCode
+  strength: EmotionStrengthCode;
 }
 export interface Routing {
   source: Actor;
@@ -285,6 +346,7 @@ export interface IChatPacket {
   emotions: EmotionEvent;
 }
 export class ChatPacket implements IChatPacket{
+  createTime:number
   type:ChatPacketType;
   date: string;
   packetId: PacketId;
@@ -295,6 +357,7 @@ export class ChatPacket implements IChatPacket{
   custom: CustomEvent;
   emotions: EmotionEvent;
   constructor(props: ChatPacketProps){
+    this.createTime = props.createTime ? props.createTime : Date.now()
     this.type = props.type
     this.date = props.date
     this.audio = props.audio
