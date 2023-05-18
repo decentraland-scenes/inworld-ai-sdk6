@@ -25,6 +25,7 @@ export type RemoteNpcThinkingOptions={
   model?:GLTFShape
   modelScale?:Vector3
   modelOffset?:Vector3
+  textEnabled?:boolean
   text?:string
   textScale?:Vector3
   textOffset?:Vector3
@@ -113,7 +114,7 @@ export class RemoteNpc{
       }
     }
   
-    if(this.thinkingIconEnabled){
+    if(this.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)){
       const waitingText =new TextShape()
       waitingText.value = args.thinking.text ? args.thinking.text : "Thinking..."
       this.thinkingIconText.addComponent(waitingText)
