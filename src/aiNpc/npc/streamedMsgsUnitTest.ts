@@ -33,7 +33,6 @@ const thingCollector_hiThere:ChatMessageProps[] = new Array()
 **RAW** {"createTime":1684341155639,"type":1,"date":"2023-05-17T16:32:35.294Z","packetId":{"packetId":"cdea132c-8faa-46d7-afd7-b6c8088dcd33","utteranceId":"78a58a4c-6f1c-4686-99a8-69aceb17c396","interactionId":"8e7e13ae-0b03-4025-a383-af622e439b1e"},"routing":{"source":{"name":"27379c02-81d4-4f45-965e-e81740f8e0b5","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"text":{"text":" I don't know any songs, but I can do a silly dance for you!","final":true}}
 **RAW** {"createTime":1684341155639,"type":5,"date":"2023-05-17T16:32:35.312Z","packetId":{"packetId":"c80882cb-b1d0-4d13-80bc-f8bfee768fd9","utteranceId":"66f95638-5e1d-4a67-a283-50e7ccb0cd85","interactionId":"8e7e13ae-0b03-4025-a383-af622e439b1e"},"routing":{"source":{"name":"27379c02-81d4-4f45-965e-e81740f8e0b5","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"control":{"type":3}}
 
-
 */
 
 thingCollector_hiThere.push({"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}})
@@ -79,7 +78,7 @@ function addAll(streamedMsg:StreamedMessages,thingCollector_hiThere:ChatMessageP
  
 
 function testForCountOf(METHOD_NAME:string,streamedMsg:StreamedMessages,count:number
-    ,opts:{mustBeText?:boolean,textRespExpected?:ExpectedMessageProps[]}):{failed?:boolean,nextCounter:number}{
+    ,opts:{mustBeText?:boolean,textRespExpected?:ExpectedMessageProps[],mustBeEmotion?:boolean}):{failed?:boolean,nextCounter:number}{
   let  next:ChatNext
   let nextCounter = 0
   for(let x=0;x<count;x++){
@@ -91,6 +90,11 @@ function testForCountOf(METHOD_NAME:string,streamedMsg:StreamedMessages,count:nu
         logFail(METHOD_NAME,"expected to have next text!!!",nextCounter,next)
         return {failed:true,nextCounter:nextCounter}
       } 
+      if(opts && opts.mustBeEmotion && next.emotion === undefined){
+        logFail(METHOD_NAME,"expected to have next emotion!!!",nextCounter,next)
+        return {failed:true,nextCounter:nextCounter}
+      } 
+      
       if(opts && opts.textRespExpected){
         if(next.text.packet.text.text.trim() !== opts.textRespExpected[nextCounter].text.trim()){
           logFail(METHOD_NAME,"expected to text match",nextCounter,next,next.text.packet.text,"!= (expected) ->",opts.textRespExpected[nextCounter])
@@ -153,6 +157,52 @@ function testTextThenAudio(thingCollector_hiThere:ChatMessageProps[]){
 
   logPass(METHOD_NAME)
 }
+
+function testTextThenAudioThenEmotion(thingCollector_hiThere:ChatMessageProps[]){
+  const METHOD_NAME = "testTextThenAudioThenEmotion"
+  TOTAL_TESTS++
+  const streamedMsg = new StreamedMessages()
+
+  logFail(METHOD_NAME,"IMPLEMENT ME")
+  
+
+  addAll(streamedMsg,thingCollector_hiThere)
+  let  next:ChatNext
+ 
+  let nextCounter = 0
+  
+  //expecting 1
+  const countOfResult = testForCountOf( METHOD_NAME, streamedMsg, 1, {mustBeText:true,mustBeEmotion:true} )
+  if(countOfResult.failed){
+    return;
+  }
+
+  logPass(METHOD_NAME)
+}
+
+function testTextThenEmotionThenAudio(thingCollector_hiThere:ChatMessageProps[]){
+  const METHOD_NAME = "testTextThenEmotionThenAudio"
+  TOTAL_TESTS++
+  const streamedMsg = new StreamedMessages()
+
+  //logFail(METHOD_NAME,"IMPLEMENT ME")
+
+
+  addAll(streamedMsg,thingCollector_hiThere)
+  let  next:ChatNext
+ 
+  let nextCounter = 0
+  
+  //expecting 1
+  const countOfResult = testForCountOf( METHOD_NAME, streamedMsg, 1, {mustBeText:true,mustBeEmotion:true} )
+  if(countOfResult.failed){
+    return;
+  }
+
+  logPass(METHOD_NAME)
+}
+
+
 
 function testNothing(thingCollector_hiThere:ChatMessageProps[]){
   const METHOD_NAME = "testNothing"
@@ -306,7 +356,10 @@ function useCaseDidntPlayFirst2Text(thingCollector_hiThere:ChatMessageProps[],te
 } 
 
 log(CLASSNAME,"STARTING","UNIT.TEST.RESULT") 
+log(CLASSNAME,"STARTING","UNIT.TEST.RESULT..") 
+log(CLASSNAME,"STARTING","UNIT.TEST.RESULT...") 
   
+if(true){
 useCaseDidntPlayFirst2Text(
   [
     {"type":2,"date":"2023-03-17T13:44:42.771Z","packetId":{"packetId":"e775fc25-df1e-42bb-b04c-363d7e5b93b7","utteranceId":"f0b036e8-48cd-41e4-a6a4-acd71525aa0a","interactionId":"b7834d90-220e-4162-bc02-110273d35cbc"},"routing":{"source":{"name":"13c49c46-0141-4308-9808-1f830f23f20a","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}}},
@@ -330,9 +383,18 @@ useCaseDidntPlayFirst2Text(
     {text:"Do you have any interesting science facts or perhaps...a Shard to share?"}
   ]
 ) 
-
+}
 if(true){
 
+
+testTextThenAudioThenEmotion(
+  [
+    {"packetId":{"packetId":"b06f124b-4b31-443d-995a-3c7950f4a879","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.882Z","type":getMessageTypeAsInt("TEXT"),"text":{"text":" Hey there!","final":true}},
+    {"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}},
+    {"packetId":{"packetId":"9db71832-3e51-4ef5-b5af-9d9f4348eb4b","utteranceId":"051aa758-c23c-4eca-80fb-0fd868988ba8","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"","isPlayer":true,"isCharacter":false},"target":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("EMOTION"),"emotions":{"behavior":EmotionBehaviorCode.JOY ,"strength":EmotionStrengthCode.NORMAL}}
+  ])
+}
+if(true){
 testTextOnlyAnotherUtteranceAudioText(
   [
     {"packetId":{"packetId":"b06f124b-4b31-443d-995a-3c7950f4a879","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.882Z","type":getMessageTypeAsInt("TEXT"),"text":{"text":" Hey there!","final":true}},
@@ -346,12 +408,16 @@ testTextOnlyAnotherUtteranceAudioText(
 testSingleHappyPath(thingCollector_hiThere) 
 testNothing([])
 testAudioOnly([{"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}}])
-testControlOnly([
-   {"type":5,"date":"2023-03-10T21:11:34.959Z","packetId":{"packetId":"4352b5d3-292a-4de5-9d94-63c2928af162","utteranceId":"fe7f4ac1-548c-46e1-b49e-31f0ebe13b02","interactionId":"354c0214-5e78-4649-89b2-0bfb90fc679f"},"routing":{"source":{"name":"f12bb175-ab7a-486f-a6e9-37a50e11d00b","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"control":{"type":3}}
-])
+
 testTextThenAudio(
   [
     {"packetId":{"packetId":"b06f124b-4b31-443d-995a-3c7950f4a879","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.882Z","type":getMessageTypeAsInt("TEXT"),"text":{"text":" Hey there!","final":true}},
+    {"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}}
+  ])
+testTextThenEmotionThenAudio(
+  [
+    {"packetId":{"packetId":"b06f124b-4b31-443d-995a-3c7950f4a879","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.882Z","type":getMessageTypeAsInt("TEXT"),"text":{"text":" Hey there!","final":true}},
+    {"packetId":{"packetId":"9db71832-3e51-4ef5-b5af-9d9f4348eb4b","utteranceId":"051aa758-c23c-4eca-80fb-0fd868988ba8","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"","isPlayer":true,"isCharacter":false},"target":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("EMOTION"),"emotions":{"behavior":EmotionBehaviorCode.JOY ,"strength":EmotionStrengthCode.NORMAL}},
     {"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}}
   ])
 testTextOnlyEndControl(
@@ -359,12 +425,14 @@ testTextOnlyEndControl(
     {"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}},
     {"packetId":{"packetId":"2641c983-b921-4403-93c9-f65015aa86a1","utteranceId":"cff2adf6-852c-422c-a937-ed82e65639d6","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:20.482Z","type":getMessageTypeAsInt("CONTROL"),"control":{"type":getControlTypeAsInt("INTERACTION_END")}}]
   )
+testControlOnly([
+  {"type":5,"date":"2023-03-10T21:11:34.959Z","packetId":{"packetId":"4352b5d3-292a-4de5-9d94-63c2928af162","utteranceId":"fe7f4ac1-548c-46e1-b49e-31f0ebe13b02","interactionId":"354c0214-5e78-4649-89b2-0bfb90fc679f"},"routing":{"source":{"name":"f12bb175-ab7a-486f-a6e9-37a50e11d00b","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"control":{"type":3}}
+])
 testTextOnlyThenEndControl(
     [
       {"packetId":{"packetId":"3545764d-cc57-4064-ad50-970abfbd6fbe","utteranceId":"0c0cceba-955f-4c8d-a8c5-eb5027b8ec70","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:19.945Z","type":getMessageTypeAsInt("AUDIO"),"audio":{"chunk":"truncated"}},
       {"packetId":{"packetId":"2641c983-b921-4403-93c9-f65015aa86a1","utteranceId":"cff2adf6-852c-422c-a937-ed82e65639d6","interactionId":"1822c207-d40c-4bba-983b-3c9ced7373a3"},"routing":{"source":{"name":"097ce587-2fd3-450a-b22f-522f5c552499","isPlayer":false,"isCharacter":true},"target":{"name":"","isPlayer":true,"isCharacter":false}},"date":"2023-03-09T19:49:20.482Z","type":getMessageTypeAsInt("CONTROL"),"control":{"type":getControlTypeAsInt("INTERACTION_END")}}]
     )
-
 }
 log(CLASSNAME,"ENDED","UNIT.TEST.RESULT","TOTAL_TESTS",TOTAL_TESTS,"TOTAL_PASS",TOTAL_PASS) 
 
