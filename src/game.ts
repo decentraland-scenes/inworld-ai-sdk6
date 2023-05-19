@@ -54,7 +54,7 @@ initDialogs()
       log("Idle State change: ", isIdle)
       if(isIdle){
         //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
-        REGISTRY.lobbyScene.endBattle()
+        REGISTRY.lobbyScene.disconnectHost()
       }
     })
     

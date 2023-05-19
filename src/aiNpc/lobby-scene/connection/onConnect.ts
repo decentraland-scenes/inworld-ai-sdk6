@@ -23,7 +23,6 @@ import { CONFIG } from "src/config";
 //import { SOUND_POOL_MGR } from "src/og-decentrally/modules/resources/sounds";
 //import { fetchRefreshPlayerCombinedInfo } from "src/og-decentrally/login/login-flow";
 
-
 import { REGISTRY } from "src/registry";
 import { Dialog, DialogWindow,ButtonData } from "@dcl/npc-scene-utils";
 import resources, { setSection } from "src/dcl-scene-ui-workaround/resources";
@@ -66,7 +65,7 @@ export async function onNpcRoomConnect(room: Room) {
   GAME_STATE.setGameConnected("connected");
 
   
-    onLevelConnect(room);
+  onLevelConnect(room);
   
 }
 
@@ -105,7 +104,7 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   //initLevelData(room.state.levelData)
  
   //REGISTRY.npcScene.onConnect( room )
-  REGISTRY.lobbyScene.onConnect( room )
+  REGISTRY.lobbyScene.onConnectHost( room )
 
   room.onMessage("grid", (data)=>{
     //log("GRID DATA: " + JSON.parse(data.grid)[0][0].infectionLevel)
