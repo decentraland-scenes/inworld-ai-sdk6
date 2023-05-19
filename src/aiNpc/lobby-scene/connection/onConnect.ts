@@ -82,43 +82,6 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
   });
 
   let lastInteractionId = ""
-  let playedAudioYet = false
-  let npcDialog: Dialog[] = []
-  let npcDialogAudioPacket: serverStateSpec.ChatPacket[] = []
-  const soundNPCEntity = createEntityForSound("npcSound")
-
-  const whatIsYourName: ButtonData = {
-    label: "What is your name", goToDialog: REGISTRY.askWaitingForResponse.name,
-    triggeredActions: () => {
-      const chatMessage: serverStateSpec.ChatMessage = createMessageObject("Please tell me your name?", undefined, room)
-      sendMsgToAI(chatMessage)
-    }
-  }
-  const whatCanIBuy: ButtonData = {
-    label: "What is the PW", goToDialog: REGISTRY.askWaitingForResponse.name,
-    triggeredActions: () => {
-      const chatMessage: serverStateSpec.ChatMessage = createMessageObject("What is the computer password?", undefined, room)
-      sendMsgToAI(chatMessage)
-    }
-  }
-
-  const goodbye: ButtonData = {
-    label: "Goodbye", goToDialog: REGISTRY.askWaitingForResponse.name,
-    triggeredActions: () => {
-      REGISTRY.activeNPC?.goodbye()
-
-      closeAllInteractions()
-      showInputOverlay(false)
-    }
-  }
-
-  const doYouTakeCredit: ButtonData = {
-    label: "Do you take credit", goToDialog: REGISTRY.askWaitingForResponse.name,
-    triggeredActions: () => {
-      const chatMessage: serverStateSpec.ChatMessage = createMessageObject("Do you take credit?", undefined, room)
-      sendMsgToAI(chatMessage)
-    }
-  }
 
   function createDialog(chatPart: ChatNext) {
     log("createDialog", "ENTRY", chatPart)
@@ -193,7 +156,6 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       updateDebugText(player)
     }
   }
-
 
   room.onMessage("structuredMsg", (msg: serverStateSpec.ChatPacket) => {
     log("onMessage.structuredMsg", msg);
