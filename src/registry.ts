@@ -1,5 +1,3 @@
-import { NPC } from "@dcl/npc-scene-utils"
-
 import { Dialog } from '@dcl/npc-scene-utils'
 import { Room } from "colyseus.js"
 import { RemoteNpc } from "src/aiNpc/npc/remoteNpc"

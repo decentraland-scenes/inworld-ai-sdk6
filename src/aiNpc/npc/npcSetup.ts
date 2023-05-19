@@ -45,7 +45,6 @@ export function setupNPC() {
 
         closeAllInteractions({ exclude: REGISTRY.activeNPC })
 
-
         doge.thinking([REGISTRY.askWaitingForResponse])
       },
       {
@@ -74,8 +73,6 @@ export function setupNPC() {
 
           if (doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP, doge.npcAnimations.WALK.duration)
           doge.npc.followPath()
-          const NO_LOOP = true
-          //if(doge.npcAnimations.WAVE) doge.npc.playAnimation(doge.npcAnimations.WAVE.name, NO_LOOP,doge.npcAnimations.WAVE.duration)
         }
       }
     ),
@@ -101,7 +98,6 @@ export function setupNPC() {
   )
   doge.setName("npc.doge")
   doge.npc.followPath(dogePath)
-  //doge.showThinking(true)
 
   const dclGuide = new RemoteNpc(
     { resourceName: "workspaces/genesis_city/characters/dcl_guide" }
@@ -139,10 +135,6 @@ export function setupNPC() {
         dialogCustomTheme: RESOURCES.textures.dialogAtlas,
         onWalkAway: () => {
           log("NPC", dclGuide.name, 'on walked away')
-          const LOOP = false
-
-          //if(doge.npcAnimations.WALK) doge.npc.playAnimation(doge.npcAnimations.WALK.name, LOOP,doge.npcAnimations.WALK.duration)
-          //doge.npc.followPath()
           const NO_LOOP = true
           if (doge.npcAnimations.WAVE) dclGuide.npc.playAnimation(dclGuide.npcAnimations.WAVE.name, NO_LOOP, dclGuide.npcAnimations.WAVE.duration)
         }
@@ -165,8 +157,6 @@ export function setupNPC() {
         showInputOverlay(true)
       }
       , onEndOfInteraction: () => {
-        //showInputOverlay(true)
-
       }
     }
   )

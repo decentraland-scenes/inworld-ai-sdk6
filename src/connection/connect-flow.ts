@@ -50,7 +50,6 @@ export async function joinOrCreateRoomAsync(roomName: string, options: any = {})
       resolve(loginRes)
     } catch (e) {
       log("joinOrCreateRoomAsync failed ", e)
-      //if(CONFIG.ENABLE_DEBUGGER_BREAK_POINTS) debugger
       reject(e)
     }
   })
@@ -78,11 +77,7 @@ export const colyseusReConnect = () => {
     log("attempt to reconnect to ", oldRoomId, oldRoom)
     reconnect(oldRoom.id, oldRoom.sessionId, {}).then((room) => {
       log("ReConnected!");
-      //GAME_STATE.setGameConnected('connected')
-
-      //onJoinActions(room,"reconnect")
       REGISTRY.onConnectActions(room, "reconnect")
-
     }).catch((err) => {
       log("connect-flow", "colyseusReConnect", oldRoomId, oldRoomName, oldRoom, "ERROR!", err)
       error(err);

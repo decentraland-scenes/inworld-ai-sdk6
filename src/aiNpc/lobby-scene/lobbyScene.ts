@@ -26,23 +26,16 @@ export class LobbyScene {
         this.pendingConvoActionWithNPC = undefined
         REGISTRY.activeNPC = p
 
-        //inputContainer.visible = false  
-
         closeAllInteractions({ exclude: REGISTRY.activeNPC })
 
         p.thinking([REGISTRY.askWaitingForResponse])
 
         streamedMsgs.reset()
-        //if(GAME_STATE.gameRoom) GAME_STATE.gameRoom.send("changeCharacter", {resourceName:p.config.resourceName} )      
 
         if (GAME_STATE.gameRoom && GAME_STATE.gameConnected === 'connected') {
           host.startConvoWith(p)
         } else {
           log("NPC", p.name, "GAME_STATE.gameConnected", GAME_STATE.gameConnected, "connect first")
-          //debugger
-          //TODO prompt connection system to reconnect, 
-          //then register to call me on connect
-          //need to connect first
           this.pendingConvoWithNPC = p
           host.initArena(false)
         }
@@ -53,7 +46,6 @@ export class LobbyScene {
   startConvoWith(npc: RemoteNpc) {
     log("NPC", npc.name, "GAME_STATE.gameConnected", GAME_STATE.gameConnected, "sendMsgToAI")
 
-    //do we want this side affect?
     this.pendingConvoWithNPC = undefined
     this.pendingConvoActionWithNPC = undefined
 
@@ -93,17 +85,16 @@ export class LobbyScene {
 
     if (this.pendingConvoWithNPC) {
       this.startConvoWith(this.pendingConvoWithNPC)
-      //do we want this side affect?
       this.pendingConvoWithNPC = undefined
     }
     if (this.pendingConvoActionWithNPC) {
       this.pendingConvoActionWithNPC()
     }
   }
-  disconnectHost(){
+
+  disconnectHost() {
     const METHOD_NAME = "endBattle"
-    log(METHOD_NAME,"ENTRY")
+    log(METHOD_NAME, "ENTRY")
     disconnect(true)
   }
 }
-

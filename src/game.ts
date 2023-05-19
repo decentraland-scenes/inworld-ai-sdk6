@@ -3,8 +3,8 @@ import { REGISTRY, initRegistry } from './registry'
 import { Room } from 'colyseus.js'
 import * as lobbyConn from 'src/aiNpc/lobby-scene/connection/onConnect';
 import { LobbyScene } from 'src/aiNpc/lobby-scene/lobbyScene'
-import { CONFIG, initConfig } from './config'
-import { initDialogs } from 'src/aiNpc/npc/npcDialog'
+import { initConfig } from './config'
+import { initDialogs } from 'src/aiNpc/npc/waitingDialog'
 
 
 //////// LOG PLAYER POSITION

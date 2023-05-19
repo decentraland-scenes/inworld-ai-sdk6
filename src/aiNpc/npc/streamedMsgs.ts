@@ -34,18 +34,15 @@ export function getMessageTypeAsInt(type: string | number): number {
   return type as number
 }
 export class ChatPart {
-
   read: boolean
   packet: serverStateSpec.ChatPacket
   constructor(packet: serverStateSpec.ChatPacket) {
     this.packet = packet
-    //sanitize
     this.packet.type = getMessageTypeAsInt(this.packet.type)
   }
 
   createNPCDialog(): npc.Dialog {
     log("createNPCDialog.chatpart", this.packet)
-
     if (this.packet == undefined) {
       debugger
     }
@@ -56,9 +53,6 @@ export class ChatPart {
       isEndOfDialog: true,//this.packet.text.final,
       isQuestion: false,
       skipable: false,
-      //audio: '',
-
-
     }
     return dialog
   }
@@ -249,8 +243,6 @@ export class StreamedMessages {
         break mainLoop;
       }
 
-
-
       switch (msg.packet.type) {
         case serverState.ChatPacketType.TEXT:
           text = msg
@@ -266,8 +258,6 @@ export class StreamedMessages {
           break;
       }
 
-
-
       msgIndexTemp++
       counterInc++
 
@@ -275,9 +265,7 @@ export class StreamedMessages {
 
     //debugger
 
-
     let futureControl: ChatPart
-
 
     if (incrementCounter) {
       this.messageIndex = msgIndexTemp
@@ -337,6 +325,5 @@ export class StreamedMessages {
     return ret
   }
 }
-
 
 export const streamedMsgs = new StreamedMessages()

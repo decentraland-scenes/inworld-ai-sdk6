@@ -1,7 +1,6 @@
 import { KeepRotatingComponent } from '@dcl/ecs-scene-utils'
 import * as npc from '@dcl/npc-scene-utils'
-import { NpcAnimationNameDef, NpcAnimationNameType } from 'src/registry'
-import { showInputOverlay } from './customNPCUI'
+import { NpcAnimationNameType } from 'src/registry'
 
 export class RemoteNpcConfig {
   /**
@@ -24,7 +23,7 @@ export type RemoteNpcThinkingOptions = {
   model?: GLTFShape
   modelScale?: Vector3
   modelOffset?: Vector3
-  textEnabled?:boolean
+  textEnabled?: boolean
   text?: string
   textScale?: Vector3
   textOffset?: Vector3
@@ -106,9 +105,9 @@ export class RemoteNpc {
         this.thinkingIcon.addComponent(new KeepRotatingComponent(Quaternion.Euler(0, 25, 0)))
       }
     }
-  
-    if(this.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)){
-      const waitingText =new TextShape()
+
+    if (this.thinkingIconEnabled && (args.thinking.textEnabled === undefined || args.thinking.textEnabled)) {
+      const waitingText = new TextShape()
       waitingText.value = args.thinking.text ? args.thinking.text : "Thinking..."
       this.thinkingIconText.addComponent(waitingText)
     }
