@@ -23,8 +23,8 @@ Input.instance.subscribe('BUTTON_DOWN', ActionButton.PRIMARY, true, (e) => {
 const floor = new Entity()
 floor.addComponent(new BoxShape())
 floor.addComponent(new Transform({
-  position:new Vector3(16/2,.1,16/2),
-  scale:new Vector3(16,.1,16)
+  position: new Vector3(16 / 2, .1, 16 / 2),
+  scale: new Vector3(16, .1, 16)
 }))
 engine.addEntity(floor)
 
@@ -35,27 +35,27 @@ initConfig()
 initDialogs()
 
 
-    //// AI NPC initial init
-    setupNPC()
+//// AI NPC initial init
+setupNPC()
 
-    REGISTRY.lobbyScene = new LobbyScene()
+REGISTRY.lobbyScene = new LobbyScene()
 
-    REGISTRY.lobbyScene.init()
-    //REGISTRY.lobbyScene.initArena(true), lazy load?
-  
-  
-    REGISTRY.onConnectActions = (room: Room<any>, eventName: string) => {
-      //npcConn.onNpcRoomConnect(room)
-      lobbyConn.onNpcRoomConnect(room)
-    }
+REGISTRY.lobbyScene.init()
+//REGISTRY.lobbyScene.initArena(true), lazy load?
 
-    //docs say will fire after 1 minute
-    onIdleStateChangedObservable.add(({ isIdle }) => {
-      log("Idle State change: ", isIdle)
-      if(isIdle){
-        //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
-        REGISTRY.lobbyScene.disconnectHost()
-      }
-    })
-    
+
+REGISTRY.onConnectActions = (room: Room<any>, eventName: string) => {
+  //npcConn.onNpcRoomConnect(room)
+  lobbyConn.onNpcRoomConnect(room)
+}
+
+//docs say will fire after 1 minute
+onIdleStateChangedObservable.add(({ isIdle }) => {
+  log("Idle State change: ", isIdle)
+  if (isIdle) {
+    //prevent too many connnections for AFKers, it will auto reconnect if u interact with something again
+    REGISTRY.lobbyScene.disconnectHost()
+  }
+})
+
 
