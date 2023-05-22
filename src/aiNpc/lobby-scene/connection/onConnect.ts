@@ -216,6 +216,11 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
         const nextPart = streamedMsgs.next()
         //debugger 
         if(nextPart.text){
+          //
+          if(nextPart.emotion){
+            //TODO TAG:play-emotion
+            ui.displayAnnouncement("got emotion\n"+JSON.stringify(nextPart.emotion.packet.emotions),5)
+          }
           const nextDialog = createDialog( nextPart )
           REGISTRY.activeNPC.talk([nextDialog]);
           if(true){//audio optional
@@ -293,6 +298,12 @@ function onLevelConnect(room: Room<clientState.NpcGameRoomState>) {
       streamedMsgs.started = true
       streamedMsgs.waitingForMore = false
       const dialog = createDialog(nextPart)
+      //ui.displayAnnouncement("TEST",5)
+      if(nextPart.emotion){
+        //debugger
+        //TODO TAG:play-emotion
+        ui.displayAnnouncement("got emotion\n"+JSON.stringify(nextPart.emotion.packet.emotions),5)
+      }
       if(dialog){
         REGISTRY.activeNPC.talk([dialog]);
       }else{   
