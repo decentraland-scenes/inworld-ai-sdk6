@@ -1,37 +1,10 @@
-export interface Vector3State {
-  x: number
-  y: number
-  z: number
-}
-
-export interface Quaternion3State {
-  x: number
-  y: number
-  z: number
-  w: number
-}
-
 export interface ClockState {
   serverTime: number
 }
 
-export interface PlayerButtonState {
-  forward: boolean
-  backward: boolean
-  left: boolean
-  right: boolean
-  shoot: boolean
-}
-
 export interface PlayerNpcDataState extends ClockState {
-  worldPosition: Vector3State
-
-  worldMoveDirection: Quaternion3State//world moving direction
-  shootDirection: Quaternion3State //car forward direction
-  cameraDirection: Quaternion3State //turn angle
   endTime: number
   enrollTime: number
-  teamId: string
   racePosition: number
 
   lastKnownServerTime: number
@@ -46,12 +19,10 @@ export interface PlayerState {
   sessionId: string
 
   connStatus: PlayerConnectionStatus
-  type: "combatant" | "spectator"
   remoteClientCache: InWorldConnectionClientCacheState
 
   userData: PlayerUserDataState
   npcData: PlayerNpcDataState
-  buttons: PlayerButtonState
 }
 
 export interface PlayerUserDataState {
@@ -71,7 +42,7 @@ export interface NpcState extends ClockState {
   maxLaps: number //move to track data or is max laps race data?
 }
 
-//broadcast object instead of linking to state the level details
+// //broadcast object instead of linking to state the level details
 export interface LevelDataState {
   id: string
   name: string
@@ -96,7 +67,6 @@ export function getTrackFeatureType(str: string) {
 
 export interface TrackFeatureConstructorArgs {
   name: string
-  position: ITrackFeaturePosition
   //triggerSize?:Vector3
   //shape:TrackFeatureShape
   type: TrackFeatureType
@@ -107,11 +77,10 @@ export interface TrackFeatureUpdate extends TrackFeatureConstructorArgs {
 
 }
 
-//can we get rid of and replace with 'TrackFeatureConstructorArgs'?
+// //can we get rid of and replace with 'TrackFeatureConstructorArgs'?
 
 export interface ITrackFeatureState extends ClockState {
   name: string
-  position: ITrackFeaturePosition
   //triggerSize?:Vector3
   //shape:TrackFeatureShape
   type: TrackFeatureType
@@ -120,38 +89,6 @@ export interface ITrackFeatureState extends ClockState {
 }
 
 export interface TrackFeatureStateConstructorArgs extends ITrackFeatureState {
-}
-
-export type TrackFeaturePositionConstructorArgs = {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
-}
-
-export function createTrackFeaturePositionConstructorArgs(position: ITrackFeaturePosition) {
-  return {
-    position: position.position,
-    rotation: position.rotation,
-  }
-}
-
-export interface ITrackFeaturePosition {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
-
-}
-export class TrackFeaturePosition implements ITrackFeaturePosition {
-  position?: Vector3State//optional, if set its the exact spot
-  rotation?: Quaternion3State//optional, if set its the exact rotation
-  startSegment: number
-  endSegment: number
-  offset?: Vector3State
-  centerOffset?: number
-  //entity:Entity
-
-  constructor(args: TrackFeaturePositionConstructorArgs) {
-    this.position = args.position
-    this.rotation = args.rotation
-  }
 }
 
 export interface NpcRoomDataOptions {
@@ -164,7 +101,6 @@ export interface NpcRoomDataOptions {
   timeLimit?: number
   waitTimeToStart?: number
 }
-
 
 export interface EnrollmentState extends ClockState {
   open: boolean
@@ -274,7 +210,7 @@ export namespace EmotionEvent {
 }
 
 export interface ChatPacketProps {
-  serverReceivedTime?:number
+  serverReceivedTime?: number
   audio?: AudioEvent;
   control?: ControlEvent;
   custom?: CustomEvent;
@@ -337,9 +273,10 @@ export interface IChatPacket {
   custom: CustomEvent;
   emotions: EmotionEvent;
 }
-export class ChatPacket implements IChatPacket{
-  serverReceivedTime:number
-  type:ChatPacketType;
+export class ChatPacket implements IChatPacket {
+  serverReceivedTime: number
+  createTime: number
+  type: ChatPacketType;
   date: string;
   packetId: PacketId;
   routing: Routing;
@@ -348,7 +285,7 @@ export class ChatPacket implements IChatPacket{
   control: ControlEvent;
   custom: CustomEvent;
   emotions: EmotionEvent;
-  constructor(props: ChatPacketProps){
+  constructor(props: ChatPacketProps) {
     this.serverReceivedTime = props.serverReceivedTime ? props.serverReceivedTime : Date.now() //BAD FOR CLIENT SIDE, RENAME instCreateTime??
     this.type = props.type
     this.date = props.date

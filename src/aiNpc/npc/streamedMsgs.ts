@@ -4,19 +4,6 @@ import * as npc from '@dcl/npc-scene-utils'
 
 const CLASSNAME = "streamedMsg.ts"
 
-export function getControlTypeAsInt(type: any): number {
-
-  let _type = type
-  if (type === "INTERACTION_END") {
-    _type = serverStateSpec.ChatControlType.INTERACTION_END
-  }
-  if (type === "UNKNOWN") {
-    _type = serverStateSpec.ChatControlType.UNKNOWN
-  }
-
-  return type as number
-}
-
 export function getMessageTypeAsInt(type: string | number): number {
   const METHOD_NAME = "getMessageTypeAsInt"
   if ((type as any) === 'AUDIO') {
@@ -44,7 +31,9 @@ export class ChatPart {
   createNPCDialog(): npc.Dialog {
     log("createNPCDialog.chatpart", this.packet)
     if (this.packet == undefined) {
-      debugger
+      // debugger
+      error("chatPart.packet can't be Undefined")
+      return
     }
     const text = this.packet.text.text
     const dialog: npc.Dialog = {
