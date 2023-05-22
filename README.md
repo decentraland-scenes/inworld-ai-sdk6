@@ -7,6 +7,30 @@ Deployed here
 Zone (InworldAiSdk6.dcl.eth)
 [ https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth)
 
+## Code
+
+RemoteNpc (`src/aiNpc/npc/remoteNpc.ts`) is a new class that wraps the existing NPC object.  See for more details there [https://github.com/decentraland-scenes/dcl-npc-toolkit](https://github.com/decentraland-scenes/dcl-npc-toolkit).  
+
+It adds the additional configuration for an NPC that talks to a remote server for the dialog.
+
+StreamedMessage (`src/aiNpc/npc/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from InWorld and use them with the NPC Dialog in a serial and squential way.
+
+```
+received stream of all InWorld messages all at once
+show utterance1
+player clicks next
+show utterance2
+player clicks next
+```
+
+## Customize
+
+
+`src/aiNpc/npc/customNPCUI.ts` creates a custom 2D UI to enable the player to type a question for the NPC.  Customize this as you want
+
+<img src='screenshots/custom-ui-prompt.png'/>
+
+
 ## Configuration
 
 ### Scene
@@ -38,13 +62,62 @@ const COLYSEUS_ENDPOINT_URL: Record<string, string> = {
  
 ```
 
+### Should you make your own InWorld Scene and Characters
+
+src/aiNpc/npc/npcSetup.ts
+
+```
+const myRemoteNPC = new RemoteNpc(
+    {resourceName:"workspaces/{SCENE_NAME_HERE/characters/{CHARACTER_NAME_HERE}"}
+    
+    , new npc.NPC( .... )//YOUR NPC_OBJECT_FROM @dcl/npc-scene-utils
+    
+    //ADDITIONAL CONFIG FOR REMOTE NPC
+    {
+      npcAnimations:DOGE_NPC_ANIMATIONS,
+      thinking:{
+        enabled:true,
+        model: new GLTFShape('models/loading-icon.glb'),
+        offsetX: 0,
+        offsetY: 2 ,
+        offsetZ: 0
+      }
+      ,onEndOfRemoteInteractionStream: ()=>{
+        showInputOverlay(true)
+      }
+      ,onEndOfInteraction: ()=>{
+        //end of interaction
+      }
+    }
+  }
+```
+
 ## Try it out
 
 #### Run Colyseus (Multiplayer server) (seperate tab)
 
+Optional...if you only want to see the code in action no need run the proxy server.  The example scene is pointed our Genesis Plaza proxy server so you should be able to fully run these example scene without the server side.  Should you choose create your own scene and characters you will need to run your own server.
+
+
 To create your own scene and characters follow the documentation found here [https://docs.inworld.ai/docs/intro](https://docs.inworld.ai/docs/intro).   Once you are finished run your local server.  
 
 Instructions here [https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme](https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme)
+
+Default endpoint can be found at http://localhost:2567/
+
+In the Decentrlaand scene code Change in src/config.ts to point at your local
+
+```
+const ENV = "prd"
+to
+const ENV = "local"
+```
+> This will make is so your scene uses local: "ws://127.0.0.1:2567" from the COLYSEUS_ENDPOINT_URL varaible
+
+
+Full instructions for running the proxy server can be found here Instructions here [https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme](https://github.com/decentraland-scenes/inworlds-colyseus-proxy-service#readme)
+
+#### Run Decentraland Scene (seperate tab)
 
 **Install the CLI**
 
