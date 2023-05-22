@@ -215,30 +215,30 @@ export class StreamedMessages {
         const yMin = Math.min(counterInc + maxScanDist, this.streamedMessages.length)
         let yCounter = 0
         const xPos = x
-        let emotionFound:ChatPart
+        let emotionFound: ChatPart
         //TODO make scan part of main loop
         scanLoop: for (let y = x; y < yMin; y++) {
           const msg = this.streamedMessages[y]
           //should we be checking same interaction id as above?  can a seperate interation close it?
-          
-          if(msg.packet.type === serverState.ChatPacketType.EMOTION){
+
+          if (msg.packet.type === serverState.ChatPacketType.EMOTION) {
             emotionFound = msg
           }
 
-          if(utteranceId == msg.packet.packetId.utteranceId){
+          if (utteranceId == msg.packet.packetId.utteranceId) {
             //found again, pick up here
             x--
 
             //debugger
             //move other 2 counters
-            msgIndexTemp+= yCounter
-            counterInc+= yCounter
-            
-            if(!emotion){
+            msgIndexTemp += yCounter
+            counterInc += yCounter
+
+            if (!emotion) {
               //debugger pretty save to assume it matches
               //TODO consider time stamp as part of this?
               emotion = emotionFound
-              log(METHOD_NAME,"utterance.end.check FOUND again also picked up an emotion","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.y",y,this.streamedMessages.length)
+              log(METHOD_NAME, "utterance.end.check FOUND again also picked up an emotion", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", this.messageIndex, "counterInc", counterInc, "loop.y", y, this.streamedMessages.length)
             }
 
             log(METHOD_NAME, "utterance.end.check FOUND again", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", this.messageIndex, "counterInc", counterInc, "loop.y", y, this.streamedMessages.length, "returning to ")
@@ -250,35 +250,35 @@ export class StreamedMessages {
           yCounter++
 
         }//end scan loop
- 
+
         //back check for emotions??
         //debugger
-        if(!emotion && emotionFound){
+        if (!emotion && emotionFound) {
           //debugger pretty save to assume it matches
           //TODO consider time stamp range as part of this?
           const matchedAudioDate = audio && (emotionFound.packet.date === audio.packet.date)
           const matchedTextDate = text && (emotionFound.packet.date === text.packet.date)
- 
-          if(matchedAudioDate || matchedTextDate){
-            log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+
+          if (matchedAudioDate || matchedTextDate) {
+            log(METHOD_NAME, "utterance.end.check hit NOT FOUND but found an emotion, is emotion date matched well enough", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", this.messageIndex, "counterInc", counterInc, "loop.x", x, this.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
             emotion = emotionFound
-          }else{
-            log(METHOD_NAME,"utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
+          } else {
+            log(METHOD_NAME, "utterance.end.check hit NOT FOUND but found an emotion, is emotion groupable?", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", this.messageIndex, "counterInc", counterInc, "loop.x", x, this.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
           }
           //
-          
+
         }
 
 
-        log(METHOD_NAME,"utterance.end.check hit NOT FOUND","utteranceId",utteranceId,"next",msg.packet.packetId.utteranceId ,"this.messageIndex",this.messageIndex,"counterInc",counterInc,"loop.x",x,this.streamedMessages.length,"text",text !== undefined,"audio",audio !== undefined)
-        
+        log(METHOD_NAME, "utterance.end.check hit NOT FOUND", "utteranceId", utteranceId, "next", msg.packet.packetId.utteranceId, "this.messageIndex", this.messageIndex, "counterInc", counterInc, "loop.x", x, this.streamedMessages.length, "text", text !== undefined, "audio", audio !== undefined)
 
-        break mainLoop; 
-      }  
- 
- 
 
-      switch(msg.packet.type){
+        break mainLoop;
+      }
+
+
+
+      switch (msg.packet.type) {
         case serverState.ChatPacketType.TEXT:
           text = msg
           break;
