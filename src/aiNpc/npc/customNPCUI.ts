@@ -259,8 +259,7 @@ textInput.onTextSubmit = new OnTextSubmit((x) => {
     return;
   }
   closeAllInteractions({ exclude: REGISTRY.activeNPC })
-  const chatMessage: serverStateSpec.ChatMessage = createMessageObject(x.text, undefined, GAME_STATE.gameRoom)
-  sendMsgToAI(chatMessage)
+  sendMessageToAi(x.text)
   textInput.value = ""
 })
 
