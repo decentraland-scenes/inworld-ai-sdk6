@@ -1,7 +1,6 @@
 import { getUserData, UserData } from '@decentraland/Identity'
 import {
   getCurrentRealm,
-  isPreviewMode,
   Realm,
 } from '@decentraland/EnvironmentAPI'
 import { GAME_STATE } from 'src/state'
