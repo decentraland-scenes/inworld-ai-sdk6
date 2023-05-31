@@ -135,7 +135,7 @@ export class RemoteNpc {
     this.npc.handleWalkAway()
   }
   endInteraction() {
-    log("NPC.endInteraction", "ENTRY", this.name)
+    log("THOUGHTS", "RemoteNPC", "endInteraction", "ENTRY", this.name)
     this.npc.endInteraction()
     this.cancelThinking()
     if (this.onEndOfInteraction) this.onEndOfInteraction()
@@ -157,18 +157,20 @@ export class RemoteNpc {
     this.npc.talk(script, startIndex, duration)
   }
   cancelThinking() {
-    log("NPC.cancelThinking", "ENTRY", this.name)
+    log("THOUGHTS", "RemoteNPC", "cancelThinking", "ENTRY", this.name)
     this.showThinking(false)
   }
   showThinking(val: boolean) {
     if (val) {
       if (this.thinkingIconEnabled) {
+        log("THOUGHTS", "Show thinking [", this.name, "]")
         if (!this.thinkingIconRoot.alive) engine.addEntity(this.thinkingIconRoot)
         if (!this.thinkingIcon.alive) engine.addEntity(this.thinkingIcon)
         if (!this.thinkingIconText.alive) engine.addEntity(this.thinkingIconText)
       }
     } else {
       if (this.thinkingIconEnabled) {
+        log("THOUGHTS", "Hide thinking [", this.name, "]")
         if (this.thinkingIconRoot.alive) engine.removeEntity(this.thinkingIconRoot)
         if (this.thinkingIcon.alive) engine.removeEntity(this.thinkingIcon)
         if (this.thinkingIconText.alive) engine.removeEntity(this.thinkingIconText)
@@ -176,7 +178,7 @@ export class RemoteNpc {
     }
   }
   thinking(script: npc.Dialog[], startIndex?: number | string, duration?: number) {
-    log("NPC.thinking", "ENTRY", this.name, script)
+    log("THOUGHTS", "RemoteNPC", "thinking", "ENTRY", this.name, script)
     this.showThinking(true)
 
     const NO_LOOP = true

@@ -2,7 +2,6 @@ import * as npc from '@dcl/npc-scene-utils'
 import { NpcAnimationNameType, REGISTRY } from 'src/registry'
 import { RESOURCES } from 'src/resources'
 import { RemoteNpc } from './remoteNpc'
-import { closeAllInteractions } from './connectedUtils'
 import { showInputOverlay } from './customNPCUI'
 
 const ANIM_TIME_PADD = .2
@@ -40,12 +39,6 @@ export function setupNPC() {
       { position: dogePath.path[0].clone(), scale: new Vector3(2, 2, 2) },
       'models/dogeNPC_anim4.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
       () => {
-        log('doge.NPC activated!')
-        REGISTRY.activeNPC = doge
-
-        closeAllInteractions({ exclude: REGISTRY.activeNPC })
-
-        doge.thinking([REGISTRY.askWaitingForResponse])
       },
       {
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
@@ -105,13 +98,6 @@ export function setupNPC() {
       { position: new Vector3(6, 1.5, 6), scale: new Vector3(1, 1, 1) },
       'models/robots/marsha.glb',//'models/robots/marsha.glb',//'models/Placeholder_NPC_02.glb',
       () => {
-        log('dclGuide.NPC activated!')
-        REGISTRY.activeNPC = dclGuide
-
-        closeAllInteractions({ exclude: REGISTRY.activeNPC })
-
-
-        dclGuide.thinking([REGISTRY.askWaitingForResponse])
       },
       {
         idleAnim: DOGE_NPC_ANIMATIONS.IDLE.name,
