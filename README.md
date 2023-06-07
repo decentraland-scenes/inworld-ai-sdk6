@@ -1,11 +1,11 @@
-# InWorld.ai Example
+# Inworld.ai Example
 
-This is an example scene to create AI NPCs backed by [InWorlds.ai](https://inworld.ai/arcade) service
+This is an example scene to create AI NPCs backed by [Inworlds AI](https://inworld.ai/arcade) service
 
 Deployed here 
 
 Zone (InworldAiSdk6.dcl.eth)
-[ https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2Finworldaisdk6.dcl.eth)
+[ https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2FInworldaisdk6.dcl.eth](https://play.decentraland.org/?realm=https%3A%2F%2Fworlds-content-server.decentraland.zone%2Fworld%2FInworldaisdk6.dcl.eth)
 
 ## Code
 
@@ -13,10 +13,10 @@ RemoteNpc (`src/aiNpc/npc/remoteNpc.ts`) is a new class that wraps the existing 
 
 It adds the additional configuration for an NPC that talks to a remote server for the dialog.
 
-StreamedMessage (`src/aiNpc/npc/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from InWorld and use them with the NPC Dialog in a serial and squential way.
+StreamedMessage (`src/aiNpc/npc/streamedMsgs.ts`) is a utilty that implements an Iterator pattern to enable the scene to group messages from Inworld AI and use them with the NPC Dialog in a serial and squential way.
 
 ```
-received stream of all InWorld messages all at once
+received stream of all Inworld AI messages all at once
 show utterance1
 player clicks next
 show utterance2
@@ -62,7 +62,7 @@ const COLYSEUS_ENDPOINT_URL: Record<string, string> = {
  
 ```
 
-### Should you make your own InWorld Scene and Characters
+### Should you make your own Inworld AI Scene and Characters
 
 src/aiNpc/npc/npcSetup.ts
 
